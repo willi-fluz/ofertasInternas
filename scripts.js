@@ -1,6 +1,65 @@
-/// <reference types="jquery" />
 // scrips para los eventos jquery
+
+/* variables compartidas */
+const macrourl = "https://script.google.com/macros/s/AKfycbzgoXw5kjMJyjTadF6-sRlx3MnLW_XuS768mEzaqGSVHlVWlCqNVUou8XQJYVsby46Y/exec"
 $(document).ready(function () {
+    //tareas de carga
+    poblarRegiones(); //cargamos las regiones en su select.
+    cargarOfertas();   //cargamos las ofertas en su select.
+    /* tareas de eventos */
+    //eventos de rut
+    $("#rut").on("input", function (e) {
+        this.value = limpiarRut(e.target.value);
+    });
+    $("#rut").on("blur", function (e) {
+        if (!validarRut(e.target.value)) {
+            e.target.setCustomValidity("rut inválido");
+            e.target.reportValidity();
+        }
+        else {
+            e.target.setCustomValidity("");
+        }
+    });
+    //eventos de formulario
+    $("#formulario").on("submit", function (e) {
+        e.preventDefault(); //evitamos el submit por defecto
+        console.log("Procediendo a actuar");
+        var cvFile = $("#curriculum")[0].files[0]; //obtenemos el archivo del input
+        console.log(`tipo de archivo:
+            *.${cvFile.type}`);
+        const reader = new FileReader();
+        reader.onload = async function (event) {
+            const base64 = event.target.result.split(",")[1]; //obtenemos el base64 del archivo
+            //obtenemos los datos del formulario
+            var datos = {};
+            $("#formulario").serializeArray().forEach(campo => {
+                datos[campo.name] = campo.value;
+            });
+            datos.nombreArchivo = cvFile.name;
+            datos.mimeType = cvFile.type;
+            datos = JSON.stringify(datos);
+            datos = datos.slice(0, -1) + `"base64": "${base64}"}`;
+            try {
+                const respuesta = await fetch('http://localhost:3001/', {
+                    method: 'POST',
+                    headers: {
+                        'content-type': 'text/plain;charset=utf-8'
+                    },
+                    body: JSON.stringify(datos),
+                });
+                const texto = await respuesta.text();
+                // alert(texto);
+                console.log(texto);
+            } catch (error) {
+                console.error("Error al enviar los datos", error);
+            }
+        }
+        reader.readAsDataURL(cvFile);
+    });
+});
+//funcionesh
+
+function poblarRegiones() {
     //poblamos regiones
     var selectRegiones = $("#region");
     for (region of regiones) {
@@ -20,29 +79,49 @@ $(document).ready(function () {
             selectComunas.attr("disabled", false);
             selectComunas.empty();
             regionSeleccionada.comunas.forEach(comuna => {
-selectComunas.append(`<option value="${comuna}"> ${comuna} </option>`);
-            } );
+                selectComunas.append(`<option value="${comuna}"> ${comuna} </option>`);
+            });
         }
     });
-//poblamos las ofertas
-var select = $("#oferta");
-$.ajax({
-    url: "https://script.google.com/macros/s/AKfycbzrk9jzo9bGTLVlAjLzpNqCgc6mkws8IEPx1RxPedZpUuZzyu2aULZgZtea5QjBPwzz/exec?action=listarOfertas",
-    method: "GET",
-    type: JSON,
-    success: /** @param {Array}<object> data*/
-        function (data) {
-            select.empty();
-            data.forEach((val) => {
-                select.append(`<option value="${val['Código oferta']}"> ${val['Nombre del cargo']} </option>`);
-            });
-        },
-    error: function (error) {
-        console.error("Error al cargar ofertas.");
-    }
-});
-});
+}
 
+function cargarOfertas() {
+    //poblamos las ofertas
+    var select = $("#oferta");
+    $.ajax({
+        url: `${macrourl}?action=listarOfertas`,
+        method: "GET",
+        type: JSON,
+        success: /** @param {Array}<object> data*/
+            function (data) {
+                select.empty();
+                data.forEach((val) => {
+                    select.append(`<option value="${val['Código oferta']}"> ${val['Nombre del cargo']} </option>`);
+                });
+            },
+        error: function (error) {
+            console.error("Error al cargar ofertas.");
+        }
+    });
+}
+//funciones para validar rut
+function limpiarRut(rut) {
+    rut = rut.replace(/[^0-9Kk]/g, "").toUpperCase();
+    let cuerpo = rut.slice(0, -1);
+    let dv = rut.slice(-1);
+    cuerpo = cuerpo.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    return `${cuerpo}-${dv}`;
+}
+
+function validarRut(rutCompleto) {
+    var [rut, dv] = rutCompleto.split("-");
+    rut = rut.replace(/[.]+/g, "");
+    rut = [...rut].reverse();
+    var dvEsperado = 11 - rut.reduce((sum, val, i) => sum + val * (i % 6 + 2), 0) % 11;
+    if (dvEsperado == 10)
+        dv = "K";
+    return dvEsperado == dv;
+}
 
 //envever datos json para regiones
 var regiones = [

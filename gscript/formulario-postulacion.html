@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <title>Postulación a ofertas internas</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-rbsA2VBsXqME6h2lQZlYihdMV6zRS+n/8eDZ5u1rN0z8sHvxUvoMZ5dA6zJkPq7Y" crossorigin="anonymous">
+
+  <!-- Bootstrap JS (requiere Popper.js) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-DZ5C+6qIuCv7KGLavshRzPn+uJlKp1a5xAnfoE7Qo5A1l5I43WrV4SuJDqF8+tO3" crossorigin="anonymous">
+    </script>
+  <script src="scripts.js"></script>
+</head>
+
+<body class="container mt-4">
+
+  <h2 class="text-center">Formulario de Postulación</h2>
+
+  <form id="miFormulario" class="border p-4 rounded shadow">
+
+    <!-- Selección de oferta -->
+    <div class="mb-3">
+      <label for="oferta" class="form-label">Seleccione oferta:</label>
+      <select id="oferta" class="form-control">
+        <!-- Se llenará por AJAX -->
+        <option value=""> Cargando ofertas activas </option </select>
+    </div>
+
+    <!-- Nombre y apellido -->
+    <div class="mb-3">
+      <label for="nombre" class="form-label">Nombre y Apellido:</label>
+      <input type="text" id="nombre" class="form-control" required pattern="[A-Za-z ]+">
+    </div>
+
+    <!-- Rut -->
+    <div class="mb-3">
+      <label for="rut" class="form-label">Rut:</label>
+      <input type="text" id="rut" class="form-control" required>
+    </div>
+
+    <!-- Fecha de nacimiento -->
+    <div class="mb-3">
+      <label for="fechaNacimiento" class="form-label">Fecha de nacimiento:</label>
+      <input type="date" id="fechaNacimiento" class="form-control" required>
+    </div>
+
+    <!-- Teléfono -->
+    <div class="mb-3">
+      <label for="telefono" class="form-label">Teléfono:</label>
+      <input type="tel" id="telefono" class="form-control" required>
+    </div>
+
+    <!-- Correo -->
+    <div class="mb-3">
+      <label for="correo" class="form-label">Correo:</label>
+      <input type="email" id="correo" class="form-control" required>
+    </div>
+
+    <!-- Repita su correo -->
+    <div class="mb-3">
+      <label for="repiteCorreo" class="form-label">Repita su correo:</label>
+      <input type="email" id="repiteCorreo" class="form-control" required>
+    </div>
+
+    <!-- Dirección -->
+    <div class="mb-3">
+      <label for="direccion" class="form-label">Dirección:</label>
+      <input type="text" id="direccion" class="form-control" required>
+    </div>
+
+    <!-- Región -->
+    <div class="mb-3">
+      <label for="region" class="form-label"> Región: </label>
+      <select id="region" class="form-control">
+        <!-- lo llenaremos por jquery-->
+         <option value=""> Seleccione una región </option>
+      </select>
+    </div>
+    <!-- Comuna -->
+    <div class="mb-3">
+      <label for="comuna" class="form-label">Comuna:</label>
+      <select id="comuna" class="form-control" disabled>
+        <!-- Opciones de comunas -->
+      </select>
+    </div>
+
+    <!-- Experiencia en el cargo -->
+    <div class="mb-3">
+      <label for="experiencia" class="form-label">Experiencia en el cargo a postular:</label>
+      <textarea id="experiencia" class="form-control" rows="3" required></textarea>
+    </div>
+
+    <!-- Escolaridad -->
+    <div class="mb-3">
+      <label for="escolaridad" class="form-label">Escolaridad:</label>
+      <select id="escolaridad" class="form-control">
+        <option value="primaria">Primaria</option>
+        <option value="secundaria">Secundaria</option>
+        <option value="universitaria">Universitaria</option>
+      </select>
+    </div>
+
+    <!-- Profesión u oficio -->
+    <div class="mb-3">
+      <label for="profesion" class="form-label">Profesión u oficio:</label>
+      <input type="text" id="profesion" class="form-control" required>
+    </div>
+
+    <!-- Condición visual -->
+    <div class="mb-3">
+      <label class="form-label">Condición visual:</label>
+      <div>
+        <label class="form-check-label me-3">
+          <input type="radio" class="form-check-input" name="condicionVisual" value="bajaVision"> Baja visión
+        </label>
+        <label class="form-check-label">
+          <input type="radio" class="form-check-input" name="condicionVisual" value="ceguera"> Ceguera
+        </label>
+      </div>
+    </div>
+
+    <!-- Credencial de discapacidad -->
+    <div class="mb-3">
+      <label class="form-label">¿Posee credencial de discapacidad?</label>
+      <div>
+        <label class="form-check-label me-3">
+          <input type="radio" class="form-check-input" name="credencial" value="si"> Sí
+        </label>
+        <label class="form-check-label">
+          <input type="radio" class="form-check-input" name="credencial" value="no"> No
+        </label>
+      </div>
+    </div>
+
+    <!-- Pensión de invalidez -->
+    <div class="mb-3">
+      <label class="form-label">¿Posee pensión de invalidez?</label>
+      <div>
+        <label class="form-check-label me-3">
+          <input type="radio" class="form-check-input" name="pension" value="si"> Sí
+        </label>
+        <label class="form-check-label">
+          <input type="radio" class="form-check-input" name="pension" value="no"> No
+        </label>
+      </div>
+    </div>
+
+    <!-- Nivel de tiflotecnología -->
+    <div class="mb-3">
+      <label class="form-label">Nivel de tiflotecnología:</label>
+      <div>
+        <label class="form-check-label me-3">
+          <input type="radio" class="form-check-input" name="nivelTiflo" value="bajo"> Bajo
+        </label>
+        <label class="form-check-label me-3">
+          <input type="radio" class="form-check-input" name="nivelTiflo" value="intermedio"> Intermedio
+        </label>
+        <label class="form-check-label">
+          <input type="radio" class="form-check-input" name="nivelTiflo" value="avanzado"> Avanzado
+        </label>
+      </div>
+    </div>
+
+    <!-- Subir currículum -->
+    <div class="mb-3">
+      <label for="curriculum" class="form-label">Sube tu currículum:</label>
+      <input type="file" id="curriculum" class="form-control" required>
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100">Enviar</button>
+  </form>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

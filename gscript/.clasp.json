@@ -1,0 +1,16 @@
+{
+  "scriptId": "1D3wNYBpzkYIUB5iiedvkRTdJV5P96IsDnWWmKev5ra5k9Lp5kjtqvOQ8",
+  "rootDir": "",
+  "projectId": "tclasp",
+  "scriptExtensions": [
+    ".js",
+    ".gs"
+  ],
+  "htmlExtensions": [
+    ".html"
+  ],
+  "jsonExtensions": [
+    ".json"
+  ],
+  "filePushOrder": []
+}
